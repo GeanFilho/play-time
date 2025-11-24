@@ -15,6 +15,10 @@
   --creme: #fdf6e3;
   --creme2: #f7efe0;
   --sombra: rgba(0,0,0,0.18);
+
+  --vidro: rgba(255,255,255,0.35);
+  --borda-vidro: rgba(255,255,255,0.55);
+  --sombra2: rgba(0,0,0,0.15);
 }
 
 * {
@@ -41,35 +45,49 @@ header h1 {
   color: var(--roxo);
 }
 
+header p {
+  color: #7b6c5c;
+  font-size: 0.95rem;
+}
+
 .menu {
   display: flex; flex-wrap: wrap;
   gap: 10px; justify-content: center;
-  margin-bottom: 20px;
+  margin: 15px 0 20px;
 }
 
 .menu button {
   background: var(--roxo); color: white;
   padding: 10px 16px; border: none;
-  border-radius: 12px; cursor: pointer;
+  border-radius: 999px; cursor: pointer;
   box-shadow: 0 2px 6px var(--sombra);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 .menu button:hover { background: var(--roxo-claro); }
 
 #game-container {
   width: 100%; max-width: 500px;
-  background: white; border-radius: 16px;
-  padding: 20px; box-shadow: 0 4px 15px var(--sombra);
+  background: white; border-radius: 24px;
+  padding: 24px; box-shadow: 0 8px 25px var(--sombra);
+  min-height: 220px;
 }
 
+/* BOTÃO GENÉRICO */
 .play-again {
   margin-top: 20px; width: 100%;
   background: var(--roxo); color: white;
-  padding: 10px; border: none;
-  border-radius: 12px; cursor: pointer;
+  padding: 12px; border: none;
+  border-radius: 14px; cursor: pointer;
+  font-weight: 600;
 }
 .play-again:hover { background: var(--roxo-claro); }
 
-/* MEMÓRIA */
+/* ==========================================================
+   JOGO MEMÓRIA
+========================================================== */
 .memory-grid {
   display: grid; gap: 10px;
   grid-template-columns: repeat(4, 1fr);
@@ -81,7 +99,7 @@ header h1 {
   font-size: 1.7rem; cursor: pointer;
 }
 
-/* QUIZ */
+/* QUIZ GENÉRICO */
 .quiz-option {
   padding: 10px; margin: 8px 0;
   background: var(--creme2);
@@ -91,7 +109,7 @@ header h1 {
 }
 .quiz-option:hover { background: var(--creme); }
 
-/* CAÇA-PALAVRAS */
+/* CAÇA PALAVRAS */
 .wordsearch-grid {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
@@ -130,6 +148,109 @@ header h1 {
   opacity: 0.4; cursor: default;
 }
 
+/* ==========================================================
+   CAIXINHA DE PROMESSAS – CAIXA ROXA SIMPLES (SEM ENVELOPE)
+========================================================== */
+
+.caixa-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.caixa-roxa {
+  width: 260px;
+  height: 160px;
+  background: linear-gradient(135deg, var(--roxo), var(--roxo-claro));
+  border-radius: 20px;
+  box-shadow: 0 10px 25px var(--sombra);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.3s;
+  text-align: center;
+  padding: 20px;
+}
+
+.caixa-roxa:hover {
+  transform: translateY(-5px);
+}
+
+.caixa-roxa span {
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+/* CARTA DE PROMESSA */
+.carta {
+  width: 100%;
+  max-width: 350px;
+  padding: 22px 20px;
+  background: var(--vidro);
+  border: 1px solid var(--borda-vidro);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px var(--sombra2);
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  transform: translateY(20px) scale(0.97);
+  transition: 0.35s ease;
+  pointer-events: none;
+}
+
+.carta.mostrar {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.verso {
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.ref {
+  text-align: center;
+  color: var(--roxo);
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+
+.btn-whatsapp {
+  background: #25d366;
+  color: white;
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-whatsapp img {
+  width: 22px;
+}
+
+@media(max-width:480px){
+  .caixa-roxa {
+    width: 85%;
+    max-width: 340px;
+    height: 150px;
+  }
+  .carta {
+    width: 90%;
+    max-width: 340px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -140,11 +261,12 @@ header h1 {
 </header>
 
 <nav class="menu">
-  <button onclick="loadGame('memory')">🧠 Memória</button>
-  <button onclick="loadGame('quiz')">📖 Quiz Bíblico</button>
-  <button onclick="loadGame('wordsearch')">🔎 Caça-Palavras</button>
-  <button onclick="loadGame('verses')">📜 Versículos</button>
-  <button onclick="loadGame('forca')">🪢 Forca Bíblica</button>
+  <button onclick="loadGame('memory')">🧠 <span>Memória</span></button>
+  <button onclick="loadGame('quiz')">📖 <span>Quiz Bíblico</span></button>
+  <button onclick="loadGame('wordsearch')">🔎 <span>Caça-Palavras</span></button>
+  <button onclick="loadGame('verses')">📜 <span>Versículos</span></button>
+  <button onclick="loadGame('forca')">🪢 <span>Forca Bíblica</span></button>
+  <button onclick="loadGame('caixinha')">🎁 <span>Caixinha de Promessas</span></button>
 </nav>
 
 <div id="game-container">
@@ -160,10 +282,11 @@ function loadGame(game) {
   if (game === "wordsearch") return initWordSearch(c);
   if (game === "verses") return initVersesQuiz(c);
   if (game === "forca") return initForca(c);
+  if (game === "caixinha") return initCaixinha(c);
 }
 
 /* ==========================================================
-   JOGO 1 – MEMÓRIA
+   1 – MEMÓRIA
 ========================================================== */
 function initMemory(root) {
   const emojis = ["✝","🕊","📖","🙏","🌟","🕯","❤️","🤍"];
@@ -218,7 +341,7 @@ function initMemory(root) {
 }
 
 /* ==========================================================
-   JOGO 2 – QUIZ BÍBLICO (20 PERGUNTAS)
+   2 – QUIZ BÍBLICO (20 PERGUNTAS)
 ========================================================== */
 const quizData = [
   { q: "Quem construiu a arca?", a: ["Moisés","Abraão","Noé","Davi"], c:2 },
@@ -228,46 +351,44 @@ const quizData = [
   { q: "Quantos evangelhos existem?", a:["2","3","4","5"], c:2 },
   { q: "Quem traiu Jesus?", a:["Pedro","Judas","Tiago","André"], c:1 },
   { q: "Qual o 1º livro da Bíblia?", a:["Gênesis","Êxodo","Levítico","Salmos"], c:0 },
-  { q: "Quem foi engolido por um peixe?", a:["Jonas","Daniel","José","Elias"], c:0 },
-  { q: "Quem multiplicou pães?", a:["Jesus","Paulo","Pedro","Isaías"], c:0 },
-  { q: "Quem negou Jesus?", a:["Pedro","Tomé","Judas","João"], c:0 },
+  { q: "Quem foi engolido por um grande peixe?", a:["Jonas","Daniel","José","Elias"], c:0 },
+  { q: "Quem multiplicou pães e peixes?", a:["Jesus","Paulo","Pedro","Isaías"], c:0 },
+  { q: "Quem negou Jesus três vezes?", a:["Pedro","Tomé","Judas","João"], c:0 },
   { q: "Quem interpretou sonhos no Egito?", a:["José","Davi","Salomão","Samuel"], c:0 },
   { q: "O último livro da Bíblia é:", a:["Romanos","Gálatas","Apocalipse","Judas"], c:2 },
-  { q: "Quem escreveu a maioria das cartas?", a:["Pedro","Tiago","Paulo","João"], c:2 },
-  { q: "Quem abriu o rio Jordão?", a:["Josué","Elias","Moisés","Abraão"], c:0 },
-  { q: "Quem construiu o templo?", a:["Davi","Salomão","Saul","Ezequias"], c:1 },
-  { q: "Qual era a profissão de Pedro?", a:["Pescador","Carpinteiro","Pastor","Ferreiro"], c:0 },
-  { q: "Quem sonhou com uma escada para o céu?", a:["Jacó","Isaque","José","Esaú"], c:2 },
-  { q: "Quem matou 3000 com a queixada?", a:["Sansão","Davi","Saul","Gideão"], c:0 },
-  { q: "Quantos dias Noé ficou na arca?", a:["40","80","120","150"], c:0 },
-  { q: "Quem viveu 969 anos?", a:["Adão","Matusalém","Noé","Abraão"], c:1 }
+  { q: "Quem escreveu a maioria das cartas do NT?", a:["Pedro","Tiago","Paulo","João"], c:2 },
+  { q: "Quem sucedeu Moisés na liderança de Israel?", a:["Josué","Elias","Samuel","Davi"], c:0 },
+  { q: "Quem pediu sabedoria a Deus e se tornou muito sábio?", a:["Salomão","Saul","Davi","Eli"], c:0 },
+  { q: "Qual era a profissão de Pedro antes de seguir Jesus?", a:["Pescador","Carpinteiro","Pastor","Ferreiro"], c:0 },
+  { q: "Quem sonhou com uma escada que alcançava o céu?", a:["Jacó","Isaque","José","Esaú"], c:0 },
+  { q: "Quem foi lançado na cova dos leões?", a:["Daniel","Ezequiel","Isaías","Jeremias"], c:0 },
+  { q: "Quem escreveu muitos salmos?", a:["Davi","Salomão","Moisés","Neemias"], c:0 },
+  { q: "Quem foi chamado de 'amigo de Deus'?", a:["Abraão","Noé","Isaac","Jacó"], c:0 }
 ];
 
-function initQuiz(root) {
-  let i = 0, score = 0;
+function initQuiz(root){
+  let i=0, score=0;
 
-  function load() {
-    root.innerHTML = `<h3>(${i+1}/20) ${quizData[i].q}</h3>`;
+  function load(){
+    root.innerHTML = `<h3>(${i+1}/${quizData.length}) ${quizData[i].q}</h3>`;
     quizData[i].a.forEach((text, idx)=>{
       const opt = document.createElement("div");
-      opt.className="quiz-option";
-      opt.innerText=text;
+      opt.className = "quiz-option";
+      opt.innerText = text;
 
-      opt.onclick=()=>{
-        if (idx===quizData[i].c){ opt.style.background="#c8e6c9"; score++; }
+      opt.onclick = () => {
+        if (idx === quizData[i].c) { opt.style.background="#c8e6c9"; score++; }
         else opt.style.background="#ffcdd2";
 
         setTimeout(()=>{
           i++;
-          if (i<quizData.length) load();
-          else root.innerHTML=`
-            <h2>🎉 Quiz completo!</h2>
-            <p>Acertos: ${score}/20</p>
-            <button class='play-again' onclick="loadGame('quiz')">🔄 Jogar Novamente</button>
-          `;
-        },600);
+          if (i < quizData.length) load();
+          else root.innerHTML = `
+          <h2>🎉 Quiz completo!</h2>
+          <p>Acertos: ${score}/${quizData.length}</p>
+          <button class='play-again' onclick="loadGame('quiz')">🔄 Jogar novamente</button>`;
+        },650);
       };
-
       root.appendChild(opt);
     });
   }
@@ -275,108 +396,88 @@ function initQuiz(root) {
 }
 
 /* ==========================================================
-   JOGO 3 – CAÇA PALAVRAS (100% ALEATÓRIO + REINÍCIO REAL)
+   3 – CAÇA PALAVRAS
 ========================================================== */
 function initWordSearch(root){
   const words = ["FE","AMOR","PAZ","DEUS"];
   const size = 8;
   const board = Array.from({length:size},()=>Array(size).fill(null));
-  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const letters="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
   function placeWord(word){
-    let placed = false, attempts = 0;
-    while (!placed && attempts < 300){
-      attempts++;
-
-      const direction = [
-        {x:1,y:0}, {x:0,y:1}, {x:1,y:1},
-        {x:-1,y:0}, {x:0,y:-1}, {x:-1,y:-1},
-        {x:1,y:-1}, {x:-1,y:1}
-      ][Math.floor(Math.random()*8)];
-
-      const startX = Math.floor(Math.random()*size);
-      const startY = Math.floor(Math.random()*size);
-
-      let ok = true;
-      for (let i=0;i<word.length;i++){
-        const nx = startX + direction.x * i;
-        const ny = startY + direction.y * i;
-
-        if (nx<0 || ny<0 || nx>=size || ny>=size) { ok = false; break; }
-        if (board[ny][nx] && board[ny][nx] !== word[i]) { ok = false; break; }
+    let placed=false, tries=0;
+    while(!placed && tries<200){
+      tries++;
+      const dirs=[
+        {x:1,y:0},{x:0,y:1},{x:1,y:1},{x:1,y:-1},
+        {x:-1,y:0},{x:0,y:-1},{x:-1,y:-1},{x:-1,y:1}
+      ];
+      const d=dirs[Math.floor(Math.random()*dirs.length)];
+      const sx=Math.floor(Math.random()*size);
+      const sy=Math.floor(Math.random()*size);
+      let ok=true;
+      for(let i=0;i<word.length;i++){
+        const x=sx+d.x*i, y=sy+d.y*i;
+        if(x<0||y<0||x>=size||y>=size){ ok=false; break; }
+        if(board[y][x] && board[y][x]!==word[i]){ ok=false; break; }
       }
-      if (!ok) continue;
-
-      for (let i=0;i<word.length;i++){
-        const nx = startX + direction.x * i;
-        const ny = startY + direction.y * i;
-        board[ny][nx] = word[i];
+      if(!ok) continue;
+      for(let i=0;i<word.length;i++){
+        const x=sx+d.x*i, y=sy+d.y*i;
+        board[y][x]=word[i];
       }
-
-      placed = true;
+      placed=true;
     }
   }
 
   words.forEach(placeWord);
 
-  for (let y=0;y<size;y++){
-    for (let x=0;x<size;x++){
-      if (!board[y][x]) board[y][x] = letters[Math.floor(Math.random()*letters.length)];
+  for(let y=0;y<size;y++){
+    for(let x=0;x<size;x++){
+      if(!board[y][x]) board[y][x]=letters[Math.floor(Math.random()*letters.length)];
     }
   }
 
-  let found = new Set();
-
-  const grid = document.createElement("div");
+  let found=new Set();
+  const grid=document.createElement("div");
   grid.className="wordsearch-grid";
 
-  const list = document.createElement("p");
-  list.innerHTML="<strong>Encontre:</strong> FE • AMOR • PAZ • DEUS";
-
-  for (let y=0;y<size;y++){
-    for (let x=0;x<size;x++){
+  for(let y=0;y<size;y++){
+    for(let x=0;x<size;x++){
       const cell=document.createElement("div");
       cell.className="wordsearch-cell";
       cell.innerText=board[y][x];
 
       cell.onclick=()=>{
         cell.classList.add("selected");
-
-        words.forEach(word=>{
-          if (checkWord(word)) found.add(word);
-        });
-
-        if (found.size===words.length){
+        words.forEach(w=>{ if(checkWord(w)) found.add(w); });
+        if(found.size===words.length){
           root.innerHTML=`
-            <h2>🎉 Você encontrou todas as palavras!</h2>
-            <button class='play-again' onclick="loadGame('wordsearch')">🔄 Jogar novamente</button>
-          `;
+            <h2>🎉 Você encontrou todas!</h2>
+            <button class="play-again" onclick="loadGame('wordsearch')">🔄 Jogar novamente</button>`;
         }
       };
-
       grid.appendChild(cell);
     }
   }
 
   function checkWord(word){
-    const w = word.split("");
-    for (let y=0;y<size;y++){
-      for (let x=0;x<size;x++){
-        for (const dir of [
+    const chars=word.split("");
+    for(let y=0;y<size;y++){
+      for(let x=0;x<size;x++){
+        const dirs=[
           {x:1,y:0},{x:0,y:1},{x:1,y:1},{x:1,y:-1},
           {x:-1,y:0},{x:0,y:-1},{x:-1,y:-1},{x:-1,y:1}
-        ]){
-
-          let ok = true;
-          for (let i=0;i<w.length;i++){
-            const nx=x+dir.x*i, ny=y+dir.y*i;
-            if (nx<0||ny<0||nx>=size||ny>=size){ ok=false; break; }
-            const cell = grid.children[ny*size+nx];
-            if (!cell.classList.contains("selected") || cell.innerText !== w[i]) {
-              ok=false; break;
-            }
+        ];
+        for(const d of dirs){
+          let ok=true;
+          for(let i=0;i<chars.length;i++){
+            const nx=x+d.x*i, ny=y+d.y*i;
+            if(nx<0||ny<0||nx>=size||ny>=size){ ok=false; break; }
+            const c=grid.children[ny*size+nx];
+            if(!c.classList.contains("selected") || c.innerText!==chars[i]){ ok=false; break; }
           }
-          if (ok) return true;
+          if(ok) return true;
         }
       }
     }
@@ -384,60 +485,59 @@ function initWordSearch(root){
   }
 
   root.appendChild(grid);
+  const list=document.createElement("p");
+  list.innerHTML="<strong>Encontre:</strong> FE • AMOR • PAZ • DEUS";
   root.appendChild(list);
 }
 
 /* ==========================================================
-   JOGO 4 – QUIZ DE VERSÍCULOS (20 PERGUNTAS)
+   4 – QUIZ DE VERSÍCULOS (20 PERGUNTAS)
 ========================================================== */
 const versesData = [
-  { p: "O Senhor é o meu pastor...", a:["nada me faltará.","e eu temerei.","e me abandonará."], c:0 },
-  { p: "Tudo posso...", a:["naquele que me fortalece.","quando quero.","por minha força."], c:0 },
-  { p: "Deus é amor...", a:["e castiga sem parar.","quem não ama, não O conhece.","e rejeita muitos."], c:1 },
-  { p: "O amor cobre...", a:["uma multidão de pecados.","tudo.","nada."], c:0 },
-  { p: "A fé é o firme fundamento...", a:["de tudo o que se vê.","do que não se vê.","do medo."], c:1 },
-  { p: "Clama a mim...", a:["e não responderei.","e anunciar-te-ei coisas grandes.","e te punirei."], c:1 },
-  { p: "No mundo tereis aflições...", a:["tende bom ânimo.","desistam.","temam."], c:0 },
-  { p: "Eu sou o caminho...", a:["a verdade e a vida.","para alguns.","mas não para todos."], c:0 },
-  { p: "A alegria do Senhor...", a:["é a vossa força.","é ilusória.","é fraca."], c:0 },
-  { p: "Bem-aventurados os mansos...", a:["herdarão a terra.","não verão a Deus.","serão rejeitados."], c:0 },
-  { p: "Buscai primeiro o Reino...", a:["e nada será acrescentado.","e todas as coisas vos serão acrescentadas.","e abandonai tudo."], c:1 },
-  { p: "Deus é nosso refúgio...", a:["bem presente na angústia.","quando convém.","quando somos perfeitos."], c:0 },
-  { p: "Entrega teu caminho ao Senhor...", a:["e confia Nele.","e duvida.","e se desespera."], c:0 },
-  { p: "O justo viverá...", a:["pela fé.","pelo medo.","pela ira."], c:0 },
-  { p: "Bem-aventurados os limpos de coração...", a:["porque verão a Deus.","porque reinarão.","porque terão ouro."], c:0 },
-  { p: "A resposta branda...", a:["desvia o furor.","causa guerra.","machuca."], c:0 },
-  { p: "Perto está o Senhor...", a:["dos quebrantados.","dos arrogantes.","dos zombadores."], c:0 },
-  { p: "A minha graça te basta...", a:["porque o poder se aperfeiçoa na fraqueza.","porque não preciso de ti.","e nada mudará."], c:0 },
-  { p: "Há maior alegria em dar...", a:["do que receber.","do que doar.","do que amar."], c:0 },
-  { p: "Lâmpada para os meus pés...", a:["é a Tua Palavra.","é minha inteligência.","é minha fama."], c:0 }
+  { p: "O Senhor é o meu pastor...", a:["nada me faltará.","e me abandonará.","e eu temerei."], c:0 },
+  { p: "Tudo posso...", a:["naquele que me fortalece.","se eu quiser muito.","quando não erro."], c:0 },
+  { p: "Deus é amor...", a:["e quem ama conhece a Deus.","e rejeita a todos.","e é injusto."], c:0 },
+  { p: "O amor cobre...", a:["uma multidão de pecados.","apenas erros pequenos.","somente pecados antigos."], c:0 },
+  { p: "A fé é o firme fundamento...", a:["das coisas que se esperam.","do medo.","da dúvida."], c:0 },
+  { p: "Clama a mim...", a:["e responder-te-ei.","e te ignorarei.","e te confundirei."], c:0 },
+  { p: "No mundo tereis aflições...", a:["mas tende bom ânimo.","porque estais sozinhos.","então desistam."], c:0 },
+  { p: "Eu sou o caminho...", a:["a verdade e a vida.","um dos caminhos.","apenas um profeta."], c:0 },
+  { p: "A alegria do Senhor...", a:["é a vossa força.","é passageira.","não é verdadeira."], c:0 },
+  { p: "Bem-aventurados os mansos...", a:["porque herdarão a terra.","porque não terão problema.","porque serão esquecidos."], c:0 },
+  { p: "Buscai primeiro o Reino de Deus...", a:["e todas as coisas vos serão acrescentadas.","e nada vos será dado.","e percam tudo."], c:0 },
+  { p: "Deus é nosso refúgio e fortaleza...", a:["socorro bem presente na angústia.","distante em tempos difíceis.","apenas às vezes."], c:0 },
+  { p: "Entrega o teu caminho ao Senhor...", a:["confia nele, e Ele tudo fará.","e continue preocupado.","e tudo será em vão."], c:0 },
+  { p: "O justo viverá...", a:["pela fé.","pelo medo.","pela força do braço."], c:0 },
+  { p: "Bem-aventurados os limpos de coração...", a:["porque verão a Deus.","porque serão ricos.","porque terão fama."], c:0 },
+  { p: "A resposta branda...", a:["desvia o furor.","aumenta a ira.","é perda de tempo."], c:0 },
+  { p: "Perto está o Senhor...", a:["dos que têm o coração quebrantado.","dos arrogantes.","dos zombadores."], c:0 },
+  { p: "A minha graça te basta...", a:["porque o poder se aperfeiçoa na fraqueza.","porque nada mudará.","porque não importa."], c:0 },
+  { p: "Há maior alegria em dar...", a:["do que em receber.","do que em amar.","do que em viver."], c:0 },
+  { p: "Lâmpada para os meus pés...", a:["é a Tua Palavra.","é minha opinião.","é a tradição."], c:0 }
 ];
 
 function initVersesQuiz(root){
   let i=0, score=0;
-
   function load(){
-    root.innerHTML = `<h3>(${i+1}/20) ${versesData[i].p}</h3>`;
-
-    versesData[i].a.forEach((ans, idx)=>{
+    root.innerHTML=`<h3>(${i+1}/${versesData.length}) ${versesData[i].p}</h3>`;
+    versesData[i].a.forEach((ans,idx)=>{
       const opt=document.createElement("div");
       opt.className="quiz-option";
       opt.innerText=ans;
 
       opt.onclick=()=>{
-        if (idx===versesData[i].c){ opt.style.background="#c8e6c9"; score++; }
+        if(idx===versesData[i].c){ opt.style.background="#c8e6c9"; score++; }
         else opt.style.background="#ffcdd2";
 
         setTimeout(()=>{
           i++;
-          if (i<versesData.length) load();
+          if(i<versesData.length) load();
           else root.innerHTML=`
             <h2>📜 Concluído!</h2>
-            <p>${score}/20 acertos</p>
-            <button class='play-again' onclick="loadGame('verses')">🔄 Jogar Novamente</button>`;
-        },600);
+            <p>${score}/${versesData.length} acertos</p>
+            <button class="play-again" onclick="loadGame('verses')">🔄 Jogar novamente</button>`;
+        },650);
       };
-
       root.appendChild(opt);
     });
   }
@@ -445,131 +545,173 @@ function initVersesQuiz(root){
 }
 
 /* ==========================================================
-   JOGO 5 – FORCA BÍBLICA (PALAVRA DIÁRIA + REINÍCIO ALEATÓRIO)
-============================================================== */
-function initForca(root) {
+   5 – FORCA BÍBLICA
+========================================================== */
+function initForca(root){
 
-  // Lista de palavras bíblicas
-  const words = [
+  const words=[
     "FE","AMOR","PAZ","CRISTO","JESUS","GRACA","ORACAO","BIBLIA",
     "CRUZ","SALVACAO","MISERICORDIA","PROMESSA","ESPIRITO",
-    "GLORIA","ALELUIA","ISRAEL","JERUSALEM","DISCIPULO",
-    "APOSTOLO","IGREJA","REDENCAO","VERDADE","SABEDORIA","BONDADE"
+    "GLORIA","ALELUIA","ISRAEL","JERUSALEM","IGREJA","VERDADE","BONDADE"
   ];
 
-  // Palavra diária (fixa)
-  const day = new Date().getDate();
-  const dailyWord = words[(day - 1) % words.length];
+  const day=new Date().getDate();
+  const daily = words[(day-1) % words.length];
 
-  // Armazena última palavra vencida para evitar repetição
-  if (!window.forca_usedWords) window.forca_usedWords = new Set();
+  if(!window.forca_used) window.forca_used = new Set();
 
-  // Define a palavra secreta:
-  // - Se for a primeira vez → palavra diária
-  // - Se for reinício após acerto → palavra totalmente aleatória, mas NÃO repetida
-  function getSecretWord(isReplayAfterWin) {
-    if (!isReplayAfterWin) return dailyWord;
-
-    // palavras disponíveis exceto as já usadas e a palavra diária
-    const pool = words.filter(w => w !== dailyWord && !window.forca_usedWords.has(w));
-
-    // se acabar o pool, limpa
-    if (pool.length === 0) window.forca_usedWords.clear();
-
-    const random = pool[Math.floor(Math.random() * pool.length)];
-
-    window.forca_usedWords.add(random);
-    return random;
+  function getWord(afterWin){
+    if(!afterWin) return daily;
+    const pool = words.filter(w => w!==daily && !window.forca_used.has(w));
+    if(pool.length===0) window.forca_used.clear();
+    const pick = pool[Math.floor(Math.random()*pool.length)];
+    window.forca_used.add(pick);
+    return pick;
   }
 
-  // Descobre se estamos recomeçando após acerto
-  const isReplayAfterWin = root.dataset.replay === "win";
-
-  // Define a palavra secreta
-  const secret = getSecretWord(isReplayAfterWin);
-
-  // Reset para limpar replay state
+  const secret = getWord(root.dataset.replay==="win");
   delete root.dataset.replay;
 
-  let attemptsLeft = 6;
-  let correctLetters = new Set();
+  let attempts = 6;
+  let correct = new Set();
   let used = new Set();
 
-  root.innerHTML = `<h3>Adivinhe a palavra bíblica:</h3>`;
+  root.innerHTML="<h3>Adivinhe a palavra bíblica:</h3>";
 
-  const wordDiv = document.createElement("div");
+  const wordDiv=document.createElement("div");
   wordDiv.className="forca-word";
-  root.appendChild(wordDiv);
 
-  const status = document.createElement("p");
+  const status=document.createElement("p");
   status.style.textAlign="center";
-  status.innerText=`Erros restantes: ${attemptsLeft}`;
+  status.innerText=`Erros restantes: ${attempts}`;
+
+  const letters=document.createElement("div");
+  letters.className="forca-letters";
+
+  root.appendChild(wordDiv);
   root.appendChild(status);
+  root.appendChild(letters);
 
-  const lettersDiv=document.createElement("div");
-  lettersDiv.className="forca-letters";
-  root.appendChild(lettersDiv);
-
-  function renderWord() {
-    wordDiv.innerText = secret.split("").map(ch =>
-      correctLetters.has(ch) ? ch : "_"
-    ).join(" ");
+  function render(){
+    wordDiv.innerText = secret.split("").map(ch => correct.has(ch)?ch:"_").join(" ");
   }
 
-  function end(msg, won){
-    if (won) {
+  function end(msg, win){
+    if(win){
       root.innerHTML = `
-        <h2>${msg}</h2>
-        <p>Palavra: <strong>${secret}</strong></p>
-        <button class="play-again" onclick="
-          document.getElementById('game-container').dataset.replay='win';
-          loadGame('forca');
-        ">🔄 Jogar novamente</button>
+      <h2>${msg}</h2>
+      <p>Palavra: <strong>${secret}</strong></p>
+      <button class="play-again" onclick="
+        document.getElementById('game-container').dataset.replay='win';
+        loadGame('forca');
+      ">🔄 Jogar novamente</button>
       `;
     } else {
       root.innerHTML = `
-        <h2>${msg}</h2>
-        <p>Palavra: <strong>${secret}</strong></p>
-        <button class="play-again" onclick="loadGame('forca')">🔄 Tentar novamente</button>
-      `;
+      <h2>${msg}</h2>
+      <p>Palavra: <strong>${secret}</strong></p>
+      <button class="play-again" onclick="loadGame('forca')">🔄 Tentar novamente</button>`;
     }
   }
 
-  function checkEnd(){
-    if (secret.split("").every(ch=>correctLetters.has(ch)))
-      end("🎉 Você acertou!", true);
-    else if (attemptsLeft<=0)
-      end("😢 Fim de jogo!", false);
-  }
-
-  "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(letter=>{
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(l=>{
     const btn=document.createElement("button");
-    btn.innerText=letter;
+    btn.innerText=l;
 
     btn.onclick=()=>{
-      if (used.has(letter)) return;
-      used.add(letter);
+      if(used.has(l)) return;
+      used.add(l);
       btn.classList.add("used");
 
-      if (secret.includes(letter)){
+      if(secret.includes(l)){
         secret.split("").forEach(ch=>{
-          if (ch===letter) correctLetters.add(ch);
+          if(ch===l) correct.add(ch);
         });
       } else {
-        attemptsLeft--;
-        status.innerText=`Erros restantes: ${attemptsLeft}`;
+        attempts--;
+        status.innerText=`Erros restantes: ${attempts}`;
       }
 
-      renderWord();
-      checkEnd();
+      render();
+
+      if(secret.split("").every(ch=>correct.has(ch))) end("🎉 Você acertou!", true);
+      else if(attempts<=0) end("😢 Fim de jogo!", false);
     };
 
-    lettersDiv.appendChild(btn);
+    letters.appendChild(btn);
   });
 
-  renderWord();
+  render();
 }
 
+/* ==========================================================
+   6 – CAIXINHA DE PROMESSAS (CARTINHA)
+========================================================== */
+function initCaixinha(root){
+  root.innerHTML = `
+    <div class="caixa-wrapper">
+      <div class="caixa-roxa" onclick="sortearPromessa()">
+        <span>Clique para<br>Tirar uma Promessa</span>
+      </div>
+
+      <div id="carta" class="carta">
+        <div id="verso" class="verso"></div>
+        <div id="ref" class="ref"></div>
+        <button class="btn-whatsapp" onclick="compartilharPromessa()">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg">
+          Compartilhar no WhatsApp
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+let promessas = [
+  { texto: "O Senhor é o meu pastor; nada me faltará.", ref: "Salmos 23:1" },
+  { texto: "Tudo posso naquele que me fortalece.", ref: "Filipenses 4:13" },
+  { texto: "Não temas, porque Eu sou contigo.", ref: "Isaías 41:10" },
+  { texto: "Entrega o teu caminho ao Senhor, confia nele, e Ele tudo fará.", ref: "Salmos 37:5" },
+  { texto: "O Senhor é o nosso refúgio e fortaleza.", ref: "Salmos 46:1" },
+  { texto: "Clama a Mim, e responder-te-ei.", ref: "Jeremias 33:3" },
+  { texto: "A alegria do Senhor é a vossa força.", ref: "Neemias 8:10" },
+  { texto: "O choro pode durar uma noite, mas a alegria vem pela manhã.", ref: "Salmos 30:5" },
+  { texto: "Mil cairão ao teu lado, mas tu não serás atingido.", ref: "Salmos 91:7" },
+  { texto: "Aquele que habita no esconderijo do Altíssimo descansará à sombra do Onipotente.", ref: "Salmos 91:1" },
+  { texto: "Porque Eu bem sei os planos que tenho para vós.", ref: "Jeremias 29:11" },
+  { texto: "O Senhor te guardará de todo mal.", ref: "Salmos 121:7" },
+  { texto: "A paz de Deus guardará o vosso coração.", ref: "Filipenses 4:7" },
+  { texto: "A minha graça te basta.", ref: "2 Coríntios 12:9" },
+  { texto: "Eu estarei com você quando passar pelo fogo.", ref: "Isaías 43:2" },
+  { texto: "Bem-aventurados os que choram, porque serão consolados.", ref: "Mateus 5:4" },
+  { texto: "Buscai primeiro o Reino de Deus, e todas as coisas vos serão acrescentadas.", ref: "Mateus 6:33" },
+  { texto: "Se Deus é por nós, quem será contra nós?", ref: "Romanos 8:31" },
+  { texto: "Em tudo, Deus coopera para o bem daqueles que O amam.", ref: "Romanos 8:28" },
+  { texto: "O Senhor te porá por cabeça e não por cauda.", ref: "Deuteronômio 28:13" }
+];
+
+let ultimaPromessa = null;
+
+function sortearPromessa(){
+  let p;
+  do {
+    p = promessas[Math.floor(Math.random()*promessas.length)];
+  } while(ultimaPromessa && p.texto === ultimaPromessa.texto);
+
+  ultimaPromessa = p;
+
+  document.getElementById("verso").innerText = p.texto;
+  document.getElementById("ref").innerText   = p.ref;
+
+  document.getElementById("carta").classList.add("mostrar");
+}
+
+function compartilharPromessa(){
+  const texto = document.getElementById("verso").innerText;
+  const ref   = document.getElementById("ref").innerText;
+  const msg = `"${texto}" — ${ref}`;
+  const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`;
+  window.open(url,"_blank");
+}
 </script>
 
 </body>
